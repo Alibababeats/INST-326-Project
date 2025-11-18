@@ -11,6 +11,11 @@ that either follows the mouse cursor, or controlled by the arrow keys
 """
 import pygame
 
+pygame.init()
+
+screen = pygame.display.set_mode((1280, 720))
+pygame.display.set_caption("Monsters Inc Screen Saver")
+
 class Character:
     pass
 
