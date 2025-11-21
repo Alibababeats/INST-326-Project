@@ -13,8 +13,9 @@ import pygame
 
 pygame.init()
 
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((1280, 720)) # placeholder screen size
 pygame.display.set_caption("Monsters Inc Screen Saver")
+
 
 class Character:
     pass
@@ -30,3 +31,34 @@ class QuoteDisplay:
 
 class Background:
     pass
+
+
+def main():
+    """Runs the Pygame window
+
+    """
+    clock = pygame.time.Clock()
+    running = True
+
+    # Background color: black
+    bg_color = (0, 0, 0)
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        # Clear screen with background color
+        screen.fill(bg_color)
+
+        # Flip the display buffers
+        pygame.display.flip()
+
+        # Cap the frame rate
+        clock.tick(60)
+
+    pygame.quit()
+
+
+if __name__ == "__main__":
+    main()
