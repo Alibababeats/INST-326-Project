@@ -10,6 +10,9 @@ Within the screen saver, there will be a calander, a time, a character
 that either follows the mouse cursor, or controlled by the arrow keys
 """
 import pygame
+import os 
+import datetime
+import random
 
 pygame.init()
 
