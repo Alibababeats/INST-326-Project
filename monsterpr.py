@@ -21,24 +21,39 @@ pygame.display.set_caption("Monsters Inc Screen Saver")
 
 
 class Character:
+    """
+    A moveable character that follows the mouse cursor or is controlled by arrow keys.
+    """
     pass
 
 class DateDisplay:
+    """
+    Displays the current date on the screen with the format of 00/00/0000
+    """
     pass
 
 class TimeDisplay:
+    """
+    display the current time in the system 00:00 AM/PM format.
+    """
     pass
 
-class QuoteDisplay:
+class QuoteOfTheDayDisplay:
+    """
+    Displays the motivational quote on the screen and changes each day.
+    """
     pass
 
 class Background:
+    """
+    Manages the background images and changes them each day.
+    """
     pass
 
 
 def main():
-    """Runs the Pygame window
-
+    """
+    Runs the Pygame window
     """
     clock = pygame.time.Clock()
     running = True
