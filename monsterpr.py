@@ -77,31 +77,67 @@ class QuoteOfTheDayDisplay:
     
 class Background:
     """
-    Manages the background images and changes them every 4 hours.
+    Manages the background images and smoothly fades between.
     """
-    def __init__(self, screen): 
+    def __init__(self, screen):
         self.screen = screen
         folder = "Background images for 326 pr"
-    
+
+        # Load images
         self.images = []
         for file in os.listdir(folder):
             if file.endswith('.png') or file.endswith('.jpg'):
-                self.images.append(
-                    pygame.image.load(os.path.join(folder,file)).convert()
-            )
+                img = pygame.image.load(os.path.join(folder, file)).convert_alpha()
+                self.images.append(img)
+
+        # Image indices
         self.current = 0
+        self.next = 1
+
+        # Fade timing
+        self.fade_duration = 15000      #  15 seconds fade
+        self.last_switch = pygame.time.get_ticks()
+        self.fade_start = None
+        self.is_fading = False
+
     def draw(self):
+        """Draw the current image when not fading."""
         self.screen.blit(self.images[self.current], (0, 0))
 
+    def start_fade(self):
+        """Start the fade into the next image."""
+        self.fade_start = pygame.time.get_ticks()
+        self.is_fading = True
+        self.next = (self.current + 1) % len(self.images)
+
     def updatescreen(self):
+        """Updates background and handles fade transitions."""
         now = pygame.time.get_ticks()
 
-        # If 2 seconds passed, move to the next image
-        if now - self.last_change >= self.change_interval:
-            self.current = (self.current + 1) % len(self.images)
-            self.last_change = now
+        # Trigger fade every 2 seconds
+        if now - self.last_switch >= 2000 and not self.is_fading:
+            self.last_switch = now
+            self.start_fade()
 
-        self.draw()
+        if self.is_fading:
+            elapsed = now - self.fade_start
+            alpha = min(255, int((elapsed / self.fade_duration) * 255))
+
+            # base layer (current)
+            self.screen.blit(self.images[self.current], (0, 0))
+
+            # fading layer (next)
+            fade_img = self.images[self.next].copy()
+            fade_img.set_alpha(alpha)
+            self.screen.blit(fade_img, (0, 0))
+
+            # fade complete
+            if elapsed >= self.fade_duration:
+                self.current = self.next
+                self.is_fading = False
+
+        else:
+            self.draw()
 
 
 def main():
