@@ -5,4 +5,4 @@ Each day there is a new quote and a different screen
 
 The user will have an option to control the character with the arrow keys up, down, left, and right, or they can have the character follow the mouse. 
 
-We will be importing the pygame module to assist with movements and displaying a screen.
+We will be importing the pygame and datetime modules to assist with movements and displaying a screen.
