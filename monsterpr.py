@@ -50,7 +50,9 @@ class QuoteOfTheDayDisplay:
 
     #remove empty author rows
     dfquotesfiltered = dfquotes.dropna(subset=["Author"])
-
+    #filter quotes longer than 95 characters
+    dfquotesfilterfinal = dfquotesfiltered[dfquotesfiltered["Quote"].str.len() < 95] 
+    
     def __init__(self, screen):
         self.screen = screen 
         self.font = pygame.font.SysFont('Consolas', 24)
@@ -63,7 +65,7 @@ class QuoteOfTheDayDisplay:
         current_hour = datetime.datetime.now().hour
         if current_hour // 4 != self.last_change_hour:
             self.last_change_hour = current_hour // 4
-            random_quote = self.dfquotesfiltered.sample().iloc[0]
+            random_quote = self.dfquotesfilterfinal.sample().iloc[0]
             self.current_quote = random_quote["Quote"]
             self.current_author = random_quote["Author"]
 
@@ -72,6 +74,7 @@ class QuoteOfTheDayDisplay:
         author_text = self.font.render(f'- {self.current_author}', True, (255, 255, 255))
         self.screen.blit(quote_text, (20, 20))
         self.screen.blit(author_text, (20, 50))
+
 
     
     
@@ -158,7 +161,18 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+            
+            #fullscreen toggle
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_f: # Press 'f' to toggle fullscreen
+                    pygame.display.toggle_fullscreen()
+            
 
+       
      
 
         # Flip the display buffers
@@ -167,6 +181,7 @@ def main():
         
         quote_display.update_quote()
         quote_display.draw()
+
     
         # Cap the frame rate
         clock.tick(60)
