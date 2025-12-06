@@ -1,5 +1,5 @@
 """
-Ali Salem, 
+Ali Salem, Solii.M
 Monsters Inc (Group 7)
 Prof. Iskander
 INST 326
@@ -50,8 +50,19 @@ class Background:
     """
     Manages the background images and changes them every 4 hours.
     """
-    pass
-
+    def __init__(self, screen): 
+        self.screen = screen
+        folder = "Background images for 326 pr"
+    
+        self.images = []
+        for file in os.listdir(folder):
+            if file.endswith('.png') or file.endswith('.jpg'):
+                self.images.append(
+                    pygame.image.load(os.path.join(folder,file)).convert()
+            )
+        self.current = 0
+    def draw(self):
+        self.screen.blit(self.images[self.current], (0, 0))
 
 def main():
     """
@@ -60,8 +71,7 @@ def main():
     clock = pygame.time.Clock()
     running = True
 
-    # Background color: black
-    bg_color = (0, 0, 0)
+    bg_gradient = Background(screen)
 
     while running:
         for event in pygame.event.get():
@@ -69,14 +79,14 @@ def main():
                 running = False
 
         # Clear screen with background color
-        screen.fill(bg_color)
+     
 
         # Flip the display buffers
         pygame.display.flip()
 
         # Cap the frame rate
+        bg_gradient.draw()
         clock.tick(60)
-
     pygame.quit()
 
 
