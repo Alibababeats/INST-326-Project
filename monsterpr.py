@@ -47,10 +47,21 @@ class DateDisplay:
 
 
 class TimeDisplay:
-    """
+      """
     display the current time in the system 00:00 AM/PM format.
     """
-    pass
+    def __init__(self, screen, x=1100, y=60):
+        self.screen = screen 
+        self.font = pygame.font.SysFont('Consolas', 28)
+        self.x = x
+        self.y = y
+        self.color = (255, 255, 255)
+
+    def draw(self):
+        current_time = datatime.datatime.now().strftime("%I:%M %p")
+        text_surface = self.font.render(current_time, True, self.color)
+        self.screen.blit(text_surface, (self.x, self.y))
+        
 
 class QuoteOfTheDayDisplay:
     """
