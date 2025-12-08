@@ -1,5 +1,5 @@
 """
-Ali Salem, Solii.M
+Ali Salem, Solii.M, Ibrahim Ahmed, 
 Monsters Inc (Group 7)
 Prof. Iskander
 INST 326
@@ -33,7 +33,18 @@ class DateDisplay:
     """
     Displays the current date on the screen with the format of 00/00/0000
     """
-    pass
+    def __init__(self, screen, x=1100, y=20):
+        self.screen = screen
+        self.font = pygame.font.SysFont('Consolas', 28)
+        self.x = x
+        self.y = y
+        self.color = (255, 255, 255)
+
+    def draw(self):
+        today = datetime.datetime.now().strftime("%m/%d/%Y")
+        text_surface = self.font.render(today, True, self.color)
+        self.screen.blit(text_surface, (self.x, self.y))
+
 
 class TimeDisplay:
     """
@@ -155,6 +166,8 @@ def main():
     bg_gradient.change_interval = 4 * 60 * 60 * 1000  # 4 hours in milliseconds
 
     quote_display = QuoteOfTheDayDisplay(screen)
+    
+    date_display = DateDisplay(screen)
 
 
     while running:
@@ -181,6 +194,8 @@ def main():
         
         quote_display.update_quote()
         quote_display.draw()
+        
+        date_display.draw()
 
     
         # Cap the frame rate
