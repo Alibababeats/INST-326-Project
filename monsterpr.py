@@ -33,7 +33,7 @@ class DateDisplay:
     """
     Displays the current date on the screen with the format of 00/00/0000
     """
-    def __init__(self, screen, x=1100, y=20):
+    def __init__(self, screen, x=20, y=None):
         self.screen = screen
         self.font = pygame.font.SysFont('Consolas', 28)
         self.x = x
@@ -43,15 +43,19 @@ class DateDisplay:
     def draw(self):
         today = datetime.datetime.now().strftime("%m/%d/%Y")
         text_surface = self.font.render(today, True, self.color)
+        text_w, text_h = self.font.size(today)
+        # place bottom-left if y not specified
+        if self.y is None:
+            self.y = self.screen.get_height() - text_h - 10
         self.screen.blit(text_surface, (self.x, self.y))
 
 
 class TimeDisplay:
-      """
-    display the current time in the system 00:00 AM/PM format.
     """
-    def __init__(self, screen, x=1100, y=60):
-        self.screen = screen 
+    Display the current time in the system 00:00 AM/PM format.
+    """
+    def __init__(self, screen, x=None, y=None):
+        self.screen = screen
         self.font = pygame.font.SysFont('Consolas', 28)
         self.x = x
         self.y = y
@@ -60,6 +64,13 @@ class TimeDisplay:
     def draw(self):
         current_time = datetime.datetime.now().strftime("%I:%M %p")
         text_surface = self.font.render(current_time, True, self.color)
+        text_w, text_h = self.font.size(current_time)
+        # center horizontally if x not specified
+        if self.x is None:
+            self.x = (self.screen.get_width() - text_w) // 2
+        # place at bottom if y not specified
+        if self.y is None:
+            self.y = self.screen.get_height() - text_h - 10
         self.screen.blit(text_surface, (self.x, self.y))
         
 
@@ -179,6 +190,7 @@ def main():
     quote_display = QuoteOfTheDayDisplay(screen)
     
     date_display = DateDisplay(screen)
+    time_display = TimeDisplay(screen)
 
 
     while running:
@@ -199,16 +211,18 @@ def main():
        
      
 
-        # Flip the display buffers
-        pygame.display.flip()
+        # Update background, draw UI elements, then flip the display buffers
         bg_gradient.updatescreen()
-        
+
         quote_display.update_quote()
         quote_display.draw()
-        
-        date_display.draw()
 
-    
+        date_display.draw()
+        time_display.draw()
+
+        # Flip the display buffers
+        pygame.display.flip()
+
         # Cap the frame rate
         clock.tick(60)
     pygame.quit()
