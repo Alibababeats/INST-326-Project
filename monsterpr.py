@@ -6,10 +6,10 @@ INST 326
 
 A program that acts as like game disguised as a screen saver
 
-Within the screen saver, there will be a calander, a time, a character
-that either follows the mouse cursor, or controlled by the arrow keys
+Within the screen saver, there will be a calander, a time, a character 
+controlled by the arrow keys
 
-Background iterates through different backgrounds every 4 hours
+Background fades smoothly between images, quote updates every hour or every time yqou open the program
 """
 import pygame
 import os 
@@ -74,8 +74,8 @@ class QuoteOfTheDayDisplay:
 
     def update_quote(self):
         current_hour = datetime.datetime.now().hour
-        if current_hour // 4 != self.last_change_hour:
-            self.last_change_hour = current_hour // 4
+        if current_hour // 1 != self.last_change_hour:
+            self.last_change_hour = current_hour // 1  # Update every hour
             random_quote = self.dfquotesfilterfinal.sample().iloc[0]
             self.current_quote = random_quote["Quote"]
             self.current_author = random_quote["Author"]
