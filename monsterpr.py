@@ -58,7 +58,7 @@ class TimeDisplay:
         self.color = (255, 255, 255)
 
     def draw(self):
-        current_time = datatime.datatime.now().strftime("%I:%M %p")
+        current_time = datetime.datetime.now().strftime("%I:%M %p")
         text_surface = self.font.render(current_time, True, self.color)
         self.screen.blit(text_surface, (self.x, self.y))
         
