@@ -27,7 +27,22 @@ class Character:
     """
     A moveable character that follows the mouse cursor or is controlled by arrow keys.
     """
-    pass
+    starting_pos = (640, 360)  # Start in the center of the screen
+    def __init__(self):
+        coordinates = Character.starting_pos
+        self.x = coordinates[0]
+        self.y = coordinates[1]
+        self.speed = 5  # Movement speed
+        
+    def move(self, direction):
+        if direction == 'up':
+            self.y -= self.speed
+        elif direction == 'down':
+            self.y += self.speed
+        elif direction == 'left':
+            self.x -= self.speed
+        elif direction == 'right':
+            self.x += self.speed
 
 class DateDisplay:
     """
