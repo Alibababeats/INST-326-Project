@@ -212,9 +212,7 @@ def main():
     running = True
 
     bg_gradient = Background(screen)
-    bg_gradient.last_change = pygame.time.get_ticks()
-    bg_gradient.change_interval = 4 * 60 * 60 * 1000  # 4 hours in milliseconds
-
+    
     quote_display = QuoteDisplay(screen)
     
     date_display = DateDisplay(screen)
@@ -237,7 +235,7 @@ def main():
                 if event.key == pygame.K_f: # Press 'f' to toggle fullscreen
                     pygame.display.toggle_fullscreen()
             
-            #movement
+        #movement
         key = pygame.key.get_pressed() # detects if key is held down
         if key[pygame.K_UP]:
             player.move_up()
