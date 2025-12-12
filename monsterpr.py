@@ -65,12 +65,12 @@ class DateDisplay:
 
     def draw(self):
         today = datetime.datetime.now().strftime("%m/%d/%Y")
-        text_surface = self.font.render(today, True, self.color)
+        text_surface = self.font.render(today, True, self.color) #renders text onto the surface
         _, text_h = self.font.size(today) # the underscore is used to ignore the text_w (width) because we dont need it
         # place bottom-left if y not specified
         if self.y is None:
             self.y = self.screen.get_height() - text_h - 10
-        self.screen.blit(text_surface, (self.x, self.y))
+        self.screen.blit(text_surface, (self.x, self.y)) #puts the surface onto the screen
 
 
 class TimeDisplay:
@@ -86,7 +86,7 @@ class TimeDisplay:
 
     def draw(self):
         current_time = datetime.datetime.now().strftime("%I:%M %p")
-        text_surface = self.font.render(current_time, True, self.color)
+        text_surface = self.font.render(current_time, True, self.color) #renders text onto the surface
         text_w, text_h = self.font.size(current_time)
         # center horizontally if x not specified
         if self.x is None:
@@ -94,7 +94,7 @@ class TimeDisplay:
         # place at bottom if y not specified
         if self.y is None:
             self.y = self.screen.get_height() - text_h - 10
-        self.screen.blit(text_surface, (self.x, self.y))
+        self.screen.blit(text_surface, (self.x, self.y)) #puts surface onto the screen
         
 
 class QuoteDisplay:
@@ -126,10 +126,10 @@ class QuoteDisplay:
             self.current_author = random_quote["Author"] #get the author from the cell
 
     def draw(self):
-        quote_text = self.font.render(f'"{self.current_quote}"', True, (255, 255, 255))
-        author_text = self.font.render(f'- {self.current_author}', True, (255, 255, 255))
-        self.screen.blit(quote_text, (20, 20))
-        self.screen.blit(author_text, (20, 50))
+        quote_text = self.font.render(f'"{self.current_quote}"', True, (255, 255, 255)) #writes the quote text to the surface
+        author_text = self.font.render(f'- {self.current_author}', True, (255, 255, 255)) #writes the author text to the surface
+        self.screen.blit(quote_text, (20, 20)) #displays the surface on the screen
+        self.screen.blit(author_text, (20, 50)) #displays the surface on the screen
 
 
     
@@ -162,8 +162,8 @@ class Background:
         self.is_fading = False
 
     def draw(self):
-        """Draw the current image when not fading."""
-        self.screen.blit(self.images[self.current], (0, 0)) #acts as a placeholder
+        """Draw the current image."""
+        self.screen.blit(self.images[self.current], (0, 0)) #draws the image
 
     def start_fade(self):
         """
@@ -192,8 +192,8 @@ class Background:
 
             # fading layer (next)
             fade_img = self.images[self.next].copy()
-            fade_img.set_alpha(alpha)
-            self.screen.blit(fade_img, (0, 0))
+            fade_img.set_alpha(alpha) #set transparency level
+            self.screen.blit(fade_img, (0, 0)) #draws the image as it fades
 
             # fade complete
             if elapsed >= self.fade_duration:
@@ -259,7 +259,7 @@ def main():
         time_display.draw()
         
 
-        # Flip the display buffers
+        # takes everything we drew and puts it on the screen surface
         pygame.display.flip()
 
         # Cap the frame rate
