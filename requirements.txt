@@ -1,0 +1,6 @@
+We will be importing the pygame to open a window, pandas to load a csv file, and datetime to grab the current time and date.
+
+HOW TO USE
+TOGGLE FULLSCREEN: Press "f" on the keyboard to toggle between fullscreen and windowed
+QUIT: Press "esc"
+MOVE CHARACTER: Arrow keys
