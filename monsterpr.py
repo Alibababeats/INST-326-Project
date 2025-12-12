@@ -66,7 +66,7 @@ class DateDisplay:
     def draw(self):
         today = datetime.datetime.now().strftime("%m/%d/%Y")
         text_surface = self.font.render(today, True, self.color)
-        text_w, text_h = self.font.size(today)
+        _, text_h = self.font.size(today) # the underscore is used to ignore the text_w (width) because we dont need it
         # place bottom-left if y not specified
         if self.y is None:
             self.y = self.screen.get_height() - text_h - 10
