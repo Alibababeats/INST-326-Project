@@ -14,13 +14,12 @@ Background fades smoothly between images, quote updates every hour or every time
 import pygame
 import os 
 import datetime
-import random
 import pandas as pd
 
 pygame.init()
 
 screen = pygame.display.set_mode((1280, 720)) # placeholder screen size
-pygame.display.set_caption("Monsters Inc Screen Saver")
+pygame.display.set_caption("Monsters Inc Screen Saver") #window caption
 
 
 class Character:
@@ -29,20 +28,27 @@ class Character:
     """
     starting_pos = (640, 360)  # Start in the center of the screen
     def __init__(self):
+        
         coordinates = Character.starting_pos
         self.x = coordinates[0]
         self.y = coordinates[1]
         self.speed = 5  # Movement speed
+    def drawcharacter(self, screen):
+        # Placeholder for character drawing logic
+        pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 20)  # Draw a red circle as the character
         
-    def move(self, direction):
-        if direction == 'up':
-            self.y -= self.speed
-        elif direction == 'down':
-            self.y += self.speed
-        elif direction == 'left':
-            self.x -= self.speed
-        elif direction == 'right':
-            self.x += self.speed
+    def move_up(self):
+        self.y -= self.speed
+        
+    def move_down(self):
+        self.y += self.speed
+        
+    def move_left(self):
+        self.x -= self.speed
+        
+    def move_right(self):
+        self.x += self.speed
+    
     
         
 
@@ -91,7 +97,7 @@ class TimeDisplay:
         self.screen.blit(text_surface, (self.x, self.y))
         
 
-class QuoteOfTheDayDisplay:
+class QuoteDisplay:
     """
     Displays the motivational quote on the screen and changes every 5th minute on the clock.
     """
@@ -209,10 +215,12 @@ def main():
     bg_gradient.last_change = pygame.time.get_ticks()
     bg_gradient.change_interval = 4 * 60 * 60 * 1000  # 4 hours in milliseconds
 
-    quote_display = QuoteOfTheDayDisplay(screen)
+    quote_display = QuoteDisplay(screen)
     
     date_display = DateDisplay(screen)
     time_display = TimeDisplay(screen)
+    
+    player = Character()
 
 
     while running:
@@ -229,18 +237,29 @@ def main():
                 if event.key == pygame.K_f: # Press 'f' to toggle fullscreen
                     pygame.display.toggle_fullscreen()
             
-
-       
+            #movement
+        key = pygame.key.get_pressed() # detects if key is held down
+        if key[pygame.K_UP]:
+            player.move_up()
+        elif key[pygame.K_DOWN]:
+            player.move_down()
+        elif key[pygame.K_LEFT]:
+            player.move_left()
+        elif key[pygame.K_RIGHT]:
+            player.move_right()
      
 
         # Update background, draw UI elements, then flip the display buffers
+        
         bg_gradient.updatescreen()
-
+        player.drawcharacter(screen)
+        
         quote_display.update_quote()
         quote_display.draw()
         
         date_display.draw()
         time_display.draw()
+        
 
         # Flip the display buffers
         pygame.display.flip()
