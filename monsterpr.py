@@ -43,6 +43,8 @@ class Character:
             self.x -= self.speed
         elif direction == 'right':
             self.x += self.speed
+    
+        
 
 class DateDisplay:
     """
@@ -91,7 +93,7 @@ class TimeDisplay:
 
 class QuoteOfTheDayDisplay:
     """
-    Displays the motivational quote on the screen and changes with the background every 4 hours.
+    Displays the motivational quote on the screen and changes every 5th minute on the clock.
     """
     #load quotes from csv into dataframe
     dfquotes = pd.read_csv("quotes.csv")
@@ -104,18 +106,18 @@ class QuoteOfTheDayDisplay:
     def __init__(self, screen):
         self.screen = screen 
         self.font = pygame.font.SysFont('Consolas', 24)
-        self.last_change_hour = -1
+        self.timeblock = -1 #acts like a block, it is negative to ensure that a random quote displays immediately
         self.current_quote = "" #initialize with empty quote
         self.current_author = "" #initialize with empty author
         self.update_quote()  # Set initial quote
 
     def update_quote(self):
-        current_hour = datetime.datetime.now().hour
-        if current_hour // 1 != self.last_change_hour:
-            self.last_change_hour = current_hour // 1  # Update every hour
-            random_quote = self.dfquotesfilterfinal.sample().iloc[0]
-            self.current_quote = random_quote["Quote"]
-            self.current_author = random_quote["Author"]
+        current_minute = datetime.datetime.now().minute  #grabs the current system minute, and only the minute
+        if current_minute // 5 != self.timeblock:# Update every 5 minutes
+            self.timeblock = current_minute // 5  
+            random_quote = self.dfquotesfilterfinal.sample().iloc[0] #selects a random cell
+            self.current_quote = random_quote["Quote"] #gets the quote from the cell
+            self.current_author = random_quote["Author"] #get the author from the cell
 
     def draw(self):
         quote_text = self.font.render(f'"{self.current_quote}"', True, (255, 255, 255))
@@ -129,17 +131,19 @@ class QuoteOfTheDayDisplay:
 class Background:
     """
     Manages the background images and smoothly fades between.
+    This works by drawing the current image, and then adding another image on top
+    with an increasing alpha(transparency) untill it is no longer transparent
     """
     def __init__(self, screen):
         self.screen = screen
         folder = "Background images for 326 pr"
 
-        # Load images
-        self.images = []
-        for file in os.listdir(folder):
-            if file.endswith('.png') or file.endswith('.jpg'):
-                img = pygame.image.load(os.path.join(folder, file)).convert_alpha()
-                self.images.append(img)
+        
+        self.images = [] #empty list
+        for file in os.listdir(folder): #load all images in the folder
+            if file.endswith('.png') or file.endswith('.jpg'): #check for valid image file types, just incase we decide to add more backgrounds that have different file types
+                img = pygame.image.load(os.path.join(folder, file)).convert_alpha() #important for the images to have transparency to be able to fade
+                self.images.append(img) #add image to list
 
         # Image indices
         self.current = 0
@@ -153,10 +157,13 @@ class Background:
 
     def draw(self):
         """Draw the current image when not fading."""
-        self.screen.blit(self.images[self.current], (0, 0))
+        self.screen.blit(self.images[self.current], (0, 0)) #acts as a placeholder
 
     def start_fade(self):
-        """Start the fade into the next image."""
+        """
+        Start the fade into the next image. 
+        keeps track of the time the fade started.
+        """
         self.fade_start = pygame.time.get_ticks()
         self.is_fading = True
         self.next = (self.current + 1) % len(self.images)
@@ -231,7 +238,7 @@ def main():
 
         quote_display.update_quote()
         quote_display.draw()
-
+        
         date_display.draw()
         time_display.draw()
 
