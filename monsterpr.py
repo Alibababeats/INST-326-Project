@@ -25,29 +25,47 @@ pygame.display.set_caption("Monsters Inc Screen Saver") #window caption
 class Character:
     """
     A moveable character that follows the mouse cursor or is controlled by arrow keys.
+    args:
+        starting_pos (tuple): The starting (x, y) position of the character.
+        coordinates (tuple): The current (x, y) position of the character.
+        speed (int): The movement speed of the character.
+        x (int): The current x-coordinate of the character.
+        y (int): The current y-coordinate of the character.
+        
+    returns:
+        None
+    raises:
+        None
     """
     starting_pos = (640, 360)  # Start in the center of the screen
-    def __init__(self):
+    def __init__(self, starting_pos=starting_pos):
+        """Initializes the character at the starting position."""
         
-        coordinates = Character.starting_pos
+        coordinates = starting_pos
         self.x = coordinates[0]
         self.y = coordinates[1]
-        self.speed = 5  # Movement speed
+        self.speed = 3  # Movement speed
     def drawcharacter(self, screen):
+        """Draws the character at its current position."""
         # Placeholder for character drawing logic
         pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 20)  # Draw a red circle as the character
         
     def move_up(self):
+        """Moves the character up."""
         self.y -= self.speed
         
     def move_down(self):
+        """Moves the character down."""
         self.y += self.speed
         
     def move_left(self):
+        """Moves the character left."""
         self.x -= self.speed
         
     def move_right(self):
+        """Moves the character right."""
         self.x += self.speed
+    
     
     
         
@@ -55,8 +73,24 @@ class Character:
 class DateDisplay:
     """
     Displays the current date on the screen with the format of 00/00/0000
+    
+    Args:
+        screen (pygame.Surface): The Pygame surface where the date will be displayed.
+        x (int): The x-coordinate
+        y (int): The y-coordinate
+        today (str): The current date in MM/DD/YYYY format.
+        text_surface (pygame.Surface): The surface containing the rendered date text.
+        text_h (int): The height of the rendered text.
+        
+    Returns:
+        None
+    Raises:
+        None
     """
     def __init__(self, screen, x=20, y=None):
+        """
+        initializes the DateDisplay class with the screen, x and y coordinates, font, and color.
+        """
         self.screen = screen
         self.font = pygame.font.SysFont('Consolas', 28)
         self.x = x
@@ -64,6 +98,9 @@ class DateDisplay:
         self.color = (255, 255, 255)
 
     def draw(self):
+        """
+        draws the current date onto the screen as a surface, then blit(applies) the surface onto the window.
+        """
         today = datetime.datetime.now().strftime("%m/%d/%Y")
         text_surface = self.font.render(today, True, self.color) #renders text onto the surface
         _, text_h = self.font.size(today) # the underscore is used to ignore the text_w (width) because we dont need it
@@ -76,8 +113,21 @@ class DateDisplay:
 class TimeDisplay:
     """
     Display the current time in the system 00:00 AM/PM format.
+    Args:
+        screen (pygame.Surface): The Pygame surface where the time will be displayed.
+        x (int): The x-coordinate
+        y (int): The y-coordinate
+        color (tuple): RGB color for the text, currently set to white.
+        
+    returns:
+        None
+    raises:
+        None
     """
     def __init__(self, screen, x=None, y=None):
+        """
+        initializes the TimeDisplay class with the screen, x and y coordinates, font, and color.
+        """
         self.screen = screen
         self.font = pygame.font.SysFont('Consolas', 28)
         self.x = x
@@ -85,6 +135,9 @@ class TimeDisplay:
         self.color = (255, 255, 255)
 
     def draw(self):
+        """
+        draws the current time onto the screen as a surface, then blit(applies) the surface onto the window.
+        """
         current_time = datetime.datetime.now().strftime("%I:%M %p")
         text_surface = self.font.render(current_time, True, self.color) #renders text onto the surface
         text_w, text_h = self.font.size(current_time)
@@ -99,7 +152,19 @@ class TimeDisplay:
 
 class QuoteDisplay:
     """
-    Displays the motivational quote on the screen and changes every 5th minute on the clock.
+    Displays the motivational quote on the screen and changes every 5th minute on the system clock.
+    Args:
+        screen (pygame.Surface): The Pygame surface where the quote will be displayed.
+        timeblock (int): The current time block for quote updates. example 0-4 minutes is block 0, 5-9 is block 1, etc.
+        current_quote (str): The currently displayed quote.
+        current_author (str): The author of the currently displayed quote.
+        dfquotes (pd.DataFrame): DataFrame containing quotes and authors loaded from CSV.
+        dfquotesfiltered (pd.DataFrame): Filtered DataFrame with non-empty authors.
+        dfquotesfilterfinal (pd.DataFrame): Further filtered DataFrame with quotes shorter than 95 characters.
+    Returns:
+        None
+    Raises:
+        None
     """
     #load quotes from csv into dataframe
     dfquotes = pd.read_csv("quotes.csv")
@@ -110,6 +175,9 @@ class QuoteDisplay:
     dfquotesfilterfinal = dfquotesfiltered[dfquotesfiltered["Quote"].str.len() < 95] 
     
     def __init__(self, screen):
+        """
+        initializes the QuoteDisplay class with the screen, font, timeblock, current_quote, and current_author.
+        """
         self.screen = screen 
         self.font = pygame.font.SysFont('Consolas', 24)
         self.timeblock = -1 #acts like a block, it is negative to ensure that a random quote displays immediately
@@ -118,6 +186,9 @@ class QuoteDisplay:
         self.update_quote()  # Set initial quote
 
     def update_quote(self):
+        """
+        Updates the quote if the current time block has changed.
+        """
         current_minute = datetime.datetime.now().minute  #grabs the current system minute, and only the minute
         if current_minute // 5 != self.timeblock:# Update every 5 minutes
             self.timeblock = current_minute // 5  
@@ -126,6 +197,9 @@ class QuoteDisplay:
             self.current_author = random_quote["Author"] #get the author from the cell
 
     def draw(self):
+        """
+        Draws the quote and author onto the screen.
+        """
         quote_text = self.font.render(f'"{self.current_quote}"', True, (255, 255, 255)) #writes the quote text to the surface
         author_text = self.font.render(f'- {self.current_author}', True, (255, 255, 255)) #writes the author text to the surface
         self.screen.blit(quote_text, (20, 20)) #displays the surface on the screen
@@ -139,8 +213,26 @@ class Background:
     Manages the background images and smoothly fades between.
     This works by drawing the current image, and then adding another image on top
     with an increasing alpha(transparency) untill it is no longer transparent
+    Args:
+        screen (pygame.Surface): The Pygame surface where the background will be displayed.
+        images (list): List of loaded background images.
+        current (int): Index of the current background image.
+        next (int): Index of the next background image to fade into.
+        fade_duration (int): Duration of the fade effect in milliseconds.
+        last_switch (int): Timestamp of the last image switch.
+        fade_start (int): Timestamp when the fade started.
+        is_fading (bool): Flag indicating if a fade is currently in progress.
+        
+    Returns:
+        None
+    Raises:
+        ValueError: If an unsupported file format is encountered in the background images folder.
+        
     """
     def __init__(self, screen):
+        """
+        initializes the Background class with the screen, loads images from the specified folder
+        """
         self.screen = screen
         folder = "Background images for 326 pr"
 
@@ -150,8 +242,9 @@ class Background:
             if file.endswith('.png') or file.endswith('.jpg'): #check for valid image file types, just incase we decide to add more backgrounds that have different file types
                 img = pygame.image.load(os.path.join(folder, file)).convert_alpha() #important for the images to have transparency to be able to fade
                 self.images.append(img) #add image to list
-
-        # Image indices
+            else:
+                raise ValueError("ERROR: Unsupported file format! Only .png and .jpg are supported.")
+        # Image indexes
         self.current = 0
         self.next = 1
 
@@ -175,7 +268,9 @@ class Background:
         self.next = (self.current + 1) % len(self.images)
 
     def updatescreen(self):
-        """Updates background and handles fade transitions."""
+        """
+        Updates background and handles fade transitions.
+        """
         now = pygame.time.get_ticks()
 
         # Trigger fade every 2 seconds
@@ -187,13 +282,13 @@ class Background:
             elapsed = now - self.fade_start
             alpha = min(255, int((elapsed / self.fade_duration) * 255))
 
-            # base layer (current)
+            # the current image
             self.screen.blit(self.images[self.current], (0, 0))
 
-            # fading layer (next)
+            # the next image fading in
             fade_img = self.images[self.next].copy()
             fade_img.set_alpha(alpha) #set transparency level
-            self.screen.blit(fade_img, (0, 0)) #draws the image as it fades
+            self.screen.blit(fade_img, (0, 0)) #draws the image on top of the base layer as it fades
 
             # fade complete
             if elapsed >= self.fade_duration:
@@ -207,6 +302,16 @@ class Background:
 def main():
     """
     Runs the Pygame window
+    1. Initializes Pygame and sets up the display.
+    2. Creates instances of Background, QuoteDisplay, DateDisplay, TimeDisplay, and Character.
+    3. Enters the main loop to handle events, update game state, and render the screen.
+    4. Exits cleanly when the user quits with 'Esc'.
+    5. contains movement controls for the character using arrow keys.
+    6. Contains fullscreen toggle using 'f' key.
+    Returns:
+        None
+    Raises:
+        None
     """
     clock = pygame.time.Clock()
     running = True
@@ -218,7 +323,7 @@ def main():
     date_display = DateDisplay(screen)
     time_display = TimeDisplay(screen)
     
-    player = Character()
+    player = Character() 
 
 
     while running:
