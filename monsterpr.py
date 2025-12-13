@@ -16,9 +16,9 @@ import os
 import datetime
 import pandas as pd
 
-pygame.init()
+pygame.init() #initialize pygame
 
-screen = pygame.display.set_mode((1280, 720)) # placeholder screen size
+screen = pygame.display.set_mode((1280, 720)) #screen size
 pygame.display.set_caption("Monsters Inc Screen Saver") #window caption
 
 
@@ -31,7 +31,9 @@ class Character:
         speed (int): The movement speed of the character.
         x (int): The current x-coordinate of the character.
         y (int): The current y-coordinate of the character.
-        
+        direction (str): The current direction the character is facing. Can be "up", "down", "left", or "right".
+        base_image (pygame.Surface): The original image of the character.
+        image (pygame.Surface): The current image of the character, which may be rotated or flipped based on direction.
     returns:
         None
     raises:
@@ -45,26 +47,40 @@ class Character:
         self.x = coordinates[0]
         self.y = coordinates[1]
         self.speed = 3  # Movement speed
+        self.base_image =  pygame.image.load("rubberduck.png").convert_alpha() #load character image
+        self.base_image = pygame.transform.scale(self.base_image, (80, 80))  # rescaling the image
+        self.image = self.base_image
+        self.direction = "right" # Initial direction
     def drawcharacter(self, screen):
         """Draws the character at its current position."""
-        # Placeholder for character drawing logic
-        pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 20)  # Draw a red circle as the character
+        #blit draws the image as a surface onto the screen.
+        screen.blit(self.image, (self.x, self.y))
+        
         
     def move_up(self):
         """Moves the character up."""
         self.y -= self.speed
-        
+        if self.direction != "up":
+            self.direction = "up"
+            self.image = pygame.transform.rotate(self.base_image, 90)  # Rotate image to face up
     def move_down(self):
         """Moves the character down."""
         self.y += self.speed
-        
+        if self.direction != "down":
+            self.direction = "down"
+            self.image = pygame.transform.rotate(self.base_image, -90)  # Rotate image to face
     def move_left(self):
         """Moves the character left."""
         self.x -= self.speed
-        
+        if self.direction != "left":
+            self.direction = "left"
+            self.image = pygame.transform.flip(self.base_image, True, False)  # Flip image to face left
     def move_right(self):
         """Moves the character right."""
         self.x += self.speed
+        if self.direction != "right":
+            self.direction = "right"
+            self.image = self.base_image
     
     
     
@@ -308,6 +324,9 @@ def main():
     4. Exits cleanly when the user quits with 'Esc'.
     5. contains movement controls for the character using arrow keys.
     6. Contains fullscreen toggle using 'f' key.
+    Args:
+        hitbox (pygame.Rect): The rectangular area representing the character's hitbox.
+        screenborder (pygame.Rect): The rectangular area representing the screen borders.
     Returns:
         None
     Raises:
@@ -339,7 +358,18 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_f: # Press 'f' to toggle fullscreen
                     pygame.display.toggle_fullscreen()
-            
+        #hitbox and collision detection with screen borders.
+        hitbox = pygame.Rect(player.x, player.y, player.image.get_width(), player.image.get_height())
+        screenborder = screen.get_rect() #grab the screen border as a rect
+        if not screenborder.contains(hitbox):
+            if hitbox.left < screenborder.left:
+                player.x = 0
+            if hitbox.right > screenborder.right:
+                player.x = screen.get_width() - player.image.get_width()
+            if hitbox.top < screenborder.top:
+                player.y = 0
+            if hitbox.bottom > screenborder.bottom:
+                player.y = screen.get_height() - player.image.get_height()
         #movement
         key = pygame.key.get_pressed() # detects if key is held down
         if key[pygame.K_UP]:
