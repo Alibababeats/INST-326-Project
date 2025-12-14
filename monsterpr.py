@@ -9,7 +9,7 @@ A program that acts as like game disguised as a screen saver
 Within the screen saver, there will be a calander, a time, a character 
 controlled by the arrow keys
 
-Background fades smoothly between images, quote updates every hour or every time yqou open the program
+Background fades smoothly between images, quote updates every 5th minute and every time you rerun the program
 """
 import pygame
 import os 
