@@ -342,7 +342,7 @@ def main():
     date_display = DateDisplay(screen)
     time_display = TimeDisplay(screen)
     
-    player = Character() 
+    player = Character()
 
 
     while running:
