@@ -1,5 +1,5 @@
 """
-Ali Salem, Solii.M, Ibrahim Ahmed, 
+Ali Salem, Solii.M, Ibrahim Ahmed, Erick Sagastume
 Monsters Inc (Group 7)
 Prof. Iskander
 INST 326
